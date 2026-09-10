@@ -16,7 +16,6 @@ cd backend/models
 # Move or copy the downloaded file here
 
 ## Model Specs
-表格
 | Property | Value |
 | --- | --- |
 | Format | ONNX |
