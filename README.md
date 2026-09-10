@@ -12,10 +12,17 @@
 [![WeChat Mini Program](https://img.shields.io/badge/WeChat%20Mini%20Program-07C160)](https://developers.weixin.qq.com/miniprogram/dev/framework/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+## Demo
+
+![Phone Defect Detection Demo](assets/demo/demo_detection.jpg)
+
+*The model detects three scratches on a phone screen with confidence scores of 0.88–0.91. Green bounding boxes show precise localization.*
+
 ---
 
 ## Table of Contents
 
+- [Demo](#demo)
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [System Architecture](#system-architecture)
