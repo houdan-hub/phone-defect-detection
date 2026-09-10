@@ -1,0 +1,2 @@
+# Detection results are saved here at runtime.
+# This directory is gitignored; this file ensures the directory exists.

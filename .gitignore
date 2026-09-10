@@ -1,0 +1,136 @@
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# ============================================================
+# IDE / Editor
+# ============================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# ============================================================
+# Jupyter Notebook
+# ============================================================
+.ipynb_checkpoints/
+
+# ============================================================
+# Environment / Secrets
+# ============================================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+credentials.json
+
+# ============================================================
+# Model weights & large files (use Git LFS or releases)
+# ============================================================
+*.onnx
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.h5
+*.pb
+*.tflite
+models/*.onnx
+models/*.pt
+
+# ============================================================
+# Datasets (too large for git)
+# ============================================================
+data/
+dataset/
+datasets/
+*.zip
+*.tar
+*.tar.gz
+*.rar
+final_complete_dataset/
+final_dataset/
+
+# ============================================================
+# Runtime output
+# ============================================================
+backend/results/*
+!backend/results/.gitkeep
+backend/test_images/*
+!backend/test_images/.gitkeep
+runs/
+wandb/
+*.log
+logs/
+
+# ============================================================
+# OS files
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ============================================================
+# WeChat Mini Program
+# ============================================================
+node_modules/
+miniprogram_npm/
+project.private.config.json
+
+# ============================================================
+# Test / coverage
+# ============================================================
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# ============================================================
+# Misc
+# ============================================================
+*.bak
+*.backup
+*_backup.py
+*_backup.*
+appbackup.py
+app_backup.py
+detector_backup.py

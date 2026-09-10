@@ -1,0 +1,74 @@
+<view class="container">
+  <text class="title">二手手机外观检测系统</text>
+
+  <view class="price-input-section">
+    <text class="price-label">💰 请输入新机市场价：</text>
+    <input type="number" placeholder="默认 3000" bindinput="onPriceChange" class="input-field" value="{{basePrice}}" />
+  </view>
+
+  <view class="btn-grid">
+    <button class="view-btn" bindtap="uploadImage" data-view="front">📸 拍摄正面</button>
+    <button class="view-btn" bindtap="uploadImage" data-view="back">📸 拍摄背面</button>
+    <button class="view-btn" bindtap="uploadImage" data-view="side_diagonal1">📸 拍摄侧面1</button>
+    <button class="view-btn" bindtap="uploadImage" data-view="side_diagonal2">📸 拍摄侧面2</button>
+  </view>
+
+  <!-- 增加水印标识 -->
+  <view class="image-preview" wx:if="{{resultImage}}">
+    <view class="view-tag-overlay">{{currentView || '未知'}} 视图</view>
+    <image src="{{resultImage}}" mode="aspectFit" class="preview-img"></image>
+  </view>
+
+  <button class="grade-btn" bindtap="getFinalGrade" type="primary">✨ 生成定级报告</button>
+
+  <view wx:if="{{report}}" class="report-container">
+
+    <view class="score-header">
+      <text class="score-text">{{report.score}}</text>
+      <text class="grade-badge">{{report.grade}}</text>
+    </view>
+
+    <view class="price-box">
+      <text class="price-title">💰 预估回收价</text>
+      <text class="price-value">¥{{report.est_price}}</text>
+      <text class="price-desc">基于基准价测算，当前保值率 {{report.discount_rate}}%</text>
+    </view>
+
+    <view class="defect-section" wx:if="{{report.cards.length > 0}}">
+      <text class="section-title">🔍 瑕疵深度诊断 (点击查看大图)</text>
+      <scroll-view scroll-x="true" class="scroll-view">
+        <view class="defect-card" wx:for="{{report.cards}}" wx:key="index" bindtap="previewDefect" data-item="{{item}}">
+          <view class="card-content-wrapper" style="display: flex;">
+            <image class="defect-thumb" src="http://10.9.160.203:8000{{item.thumb_url}}" mode="aspectFill" style="width:120rpx; height:120rpx; margin-right:20rpx; border-radius:8rpx;"></image>
+
+            <view class="card-right">
+              <view class="card-header">
+                <view class="card-tag">{{item.pos}}</view>
+              </view>
+              <view class="card-type">{{item.class_name}}</view>
+              <view class="card-desc">{{item.desc}}</view>
+              <view class="card-deduct">-{{item.deduction}}分</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="defect-section" wx:else>
+      <text class="section-title">✅ 完美无瑕，未检测到扣分项</text>
+    </view>
+
+    <view class="algo-box">
+      <view class="algo-title" bindtap="toggleAlgo">
+        🧮 核心定级算法透明度 {{showAlgo ? '▲' : '▼'}}
+      </view>
+      <view class="algo-content" wx:if="{{showAlgo}}">
+        <text class="algo-text">Deduction = W_type × log10(1 + Area × 1000) × W_pos</text>
+        <text class="algo-text">• W_type: 瑕疵严重度权重 (如 Crack=50)</text>
+        <text class="algo-text">• Area: YOLOv11 像素面积比</text>
+        <text class="algo-text">• W_pos: 视角权重 (正面惩罚最高)</text>
+        <text class="algo-text">注: 采用对数平滑(log10)机制，有效防止大面积瑕疵导致扣分越界。</text>
+      </view>
+    </view>
+
+  </view>
+</view>
