@@ -157,7 +157,7 @@ User captures photo
 
 ## Deployment Considerations
 
-- **Model size**: ~5.6 MB (YOLOv11n ONNX), suitable for container deployment.
+- **Model size**: ~38 MB (YOLOv11s ONNX, FP32), suitable for container deployment.
 - **CPU inference**: ~50-100ms per image on modern CPU.
 - **GPU inference**: ~5-15ms per image with CUDA.
 - **Concurrency**: FastAPI + Uvicorn handles concurrent requests; model

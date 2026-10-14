@@ -95,7 +95,7 @@ variation.
 ```python
 from ultralytics import YOLO
 
-model = YOLO("yolov11n.pt")  # load pretrained weights
+model = YOLO("yolo11s.pt")  # load pretrained weights (base model used in thesis)
 
 model.train(
     data="data.yaml",
@@ -115,22 +115,22 @@ model.train(
 ```python
 from ultralytics import YOLO
 
-model = YOLO("yolov11n.pt")
+model = YOLO("yolo11s.pt")
 
 model.train(
     data="data.yaml",
     epochs=100,
     imgsz=640,
-    batch=16,
-    lr0=0.001,
-    patience=20,
-    # Key hyperparameters from ablation study
-    box=12.0,        # box loss gain (default: 7.5)
-    cls=3.0,         # classification loss gain (default: 0.5)
+    batch=8,
+    lr0=0.0005,
+    patience=25,
+    # Fixed loss gains shared by ALL 10 experiments (from archived args.yaml)
+    box=12.0,        # box loss gain (baseline default in this study)
+    cls=3.0,         # classification loss gain
     # Augmentation
-    mosaic=0.4,      # reduced mosaic
-    flipud=0.5,      # vertical flip
-    # No Inner-IoU, no CBAM — pure augmentation fine-tuning
+    mosaic=0.4,      # dynamic background balancing
+    flipud=0.5,      # vertical flip (space isotropy for phone photos)
+    # No Inner-IoU, no CBAM — pure physics-prior augmentation
     project="runs/detect",
     name="exp6_best",
     device=0,

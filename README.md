@@ -110,21 +110,25 @@ and ablation studies across 10 experiment groups.
 
 ## Model & Algorithm Highlights
 
-### Base Model: YOLOv11n
+### Base Model: YOLOv11s
 
-- **Backbone**: C3k2 + C2PSA (Ultralytics YOLOv11 nano)
+- **Backbone**: C3k2 + C2PSA (Ultralytics YOLOv11 small)
 - **Input**: 640 × 640 RGB
-- **Parameters**: ~2.6M | **GFLOPs**: ~6.6
+- **Parameters**: ~9.4M | **GFLOPs**: ~21.7
 - **Output**: 4 defect classes (scratch, bump, paint, crack)
 
 ### Improvements Explored (10-group ablation study)
 
+All runs share one fixed base configuration (verified from each run's
+archived `args.yaml`): **box=12.0, cls=3.0, imgsz=640, 100 epochs** —
+only the ablated variable changes per experiment.
+
 | Improvement | What it does | Outcome |
 |-------------|-------------|---------|
-| **Mosaic + flipud augmentation** | Optimized data augmentation pipeline (mosaic=0.4, flipud=0.5) | **+5.8% mAP** — best result |
-| **Inner-IoU loss** | Improved bounding-box regression loss | +4.7% when combined with augmentation |
-| **CBAM attention** | Convolutional Block Attention Module (single & multi-layer) | Negative transfer on this dataset — documented as a finding |
-| **Hyperparameter tuning** | box=12.0, cls=3.0, imgsz=640 | Part of the best configuration |
+| **Physics-prior augmentation** | Vertical flip (flipud=0.5) + dynamic mosaic (mosaic=0.4) | **+5.8% mAP, zero extra parameters** — best result (Exp 6) |
+| **Inner-IoU loss** | Auxiliary-frame bbox regression loss (ratio=0.7–0.8) | +4.7% when combined with augmentation (Exp 7); slightly negative alone |
+| **CBAM attention** | Convolutional Block Attention Module (single & multi-layer) | Negative transfer on this dataset (down to −4.3%) — documented as a finding |
+| **box loss gain** | box=12.0 vs 7.5 | Strong localization guidance is essential for hairline scratches; 12.0 wins |
 
 > **Key insight**: On this small industrial-defect dataset, aggressive data
 > augmentation delivered the largest gain, while attention modules (CBAM)
@@ -133,9 +137,11 @@ and ablation studies across 10 experiment groups.
 
 ### Dataset
 
-- **1,901 annotated images** across 4 defect classes
-- Custom-collected and augmented (blur, brightness, contrast, horizontal flip)
-- Train/val/test split with class-balanced sampling
+- **2,707 annotated real-shot images** across 4 defect classes
+- Multi-material coverage: screen glass, metal frame, back cover
+- Strict annotation spec (bounding box must hug the defect edge, ≤3px slack)
+  to eliminate AI-assisted-labeling false positives
+- Class-balanced train/val split
 
 ---
 
@@ -151,7 +157,7 @@ and ablation studies across 10 experiment groups.
 
 ### Best Model vs. Baseline
 
-| Metric | Baseline YOLOv11n | **Improved Model (Exp 6)** | Improvement |
+| Metric | Baseline YOLOv11s | **Improved Model (Exp 6)** | Improvement |
 |--------|-------------------|---------------------------|-------------|
 | **mAP@0.5** | 0.907 | **0.965** | **+5.8%** |
 | **mAP@0.5:0.95** | 0.723 | **0.783** | +6.0% |
@@ -214,11 +220,13 @@ phone-defect-detection/
 │   │   └── utils/              # config, helpers
 │   └── project.config.json
 ├── training/                   # Model training scripts & configs
-│   ├── yolo11n-cbam.yaml       # YOLOv11 + CBAM model config
+│   ├── yolov11s-cbam.yaml      # YOLOv11s + CBAM model config (real exp config)
 │   ├── train_cbam_hook.py      # CBAM injection training script
+│   ├── reproduce_experiments.py# Re-run any of the 10 ablation experiments
 │   └── README.md
 ├── experiments/                # Ablation study results
 │   ├── charts/                 # 7 publication-quality charts
+│   ├── raw_results/            # Raw per-epoch results.csv of all 10 runs
 │   ├── experiment_summary.csv  # 10-experiment comparison
 │   └── experiment_details.csv
 ├── docs/                       # Extended documentation
@@ -226,7 +234,7 @@ phone-defect-detection/
 │   ├── api_reference.md
 │   ├── training_guide.md
 │   └── grading_algorithm.md
-├── thesis/                     # Thesis abstract & references
+├── thesis/                     # Thesis abstract (EN/CN), full thesis PDF & references
 ├── assets/                     # Demo images & diagrams
 ├── requirements.txt            # Python dependencies
 ├── .env.example                # Environment variable template
@@ -242,13 +250,13 @@ phone-defect-detection/
 ### Prerequisites
 
 - Python 3.10+
-- A trained model file (`best.onnx`) — see [Model Download](#model-download)
+- A trained model file (`best.onnx`) — see [backend/models/README.md](backend/models/README.md)
 - (Optional) CUDA-capable GPU for faster inference
 
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/<your-username>/phone-defect-detection.git
+git clone https://github.com/houdan-hub/phone-defect-detection.git
 cd phone-defect-detection
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
@@ -415,7 +423,7 @@ See [`docs/training_guide.md`](docs/training_guide.md) and
 
 ## Future Work
 
-- [ ] **Larger dataset**: Expand from 1,901 to 10,000+ images with more phone models
+- [ ] **Larger dataset**: Expand from 2,707 to 10,000+ images with more phone models
 - [ ] **Segmentation**: Add defect segmentation masks for precise area measurement
 - [ ] **Web demo**: Deploy a public demo with Gradio or Streamlit
 - [ ] **Docker**: Containerize the backend for one-command deployment
@@ -441,4 +449,4 @@ The YOLOv11 base model is licensed under AGPL-3.0 by Ultralytics.
 
 ---
 
-*This project was developed as a Bachelor's thesis project. For the full thesis (Chinese), see `thesis/`.*
+*This project was developed as a Bachelor's thesis project (湖北工业大学底特律绿色工业学院). Full thesis: [`thesis/thesis_final_zh.pdf`](thesis/thesis_final_zh.pdf) (Chinese) · [Abstract & key results](thesis/abstract.md) · [Reference list](thesis/references.md).*

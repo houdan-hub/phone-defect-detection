@@ -1,102 +1,59 @@
 # Thesis Abstract / 论文摘要
 
-## English Abstract
+**Title**: 基于改进 YOLOv11 的二手手机外观瑕疵检测与智能定级系统设计
+**English Title**: Design of a Second-Hand Phone Appearance Defect Detection and Intelligent Grading System Based on Improved YOLOv11
 
-**Title**: Design of a Second-Hand Phone Appearance Defect Detection and
-Intelligent Grading System Based on Improved YOLOv11
+**Author**: 侯天博 (Tianbo Hou)
+**Advisor**: 熊才权 (Prof. Xiong Caiquan)
+**Institution**: 湖北工业大学底特律绿色工业学院 软件工程（中美合作办学）
+Detroit Green Industry Institute, Hubei University of Technology — Software Engineering (Sino-US Cooperative Program)
 
-**Author**: Tianbo Hou (侯天博)
-**Advisor**: Prof. Xiong Caiquan (熊才权)
-**Institution**: Detroit Green Industry Institute, Software Engineering
-(Sino-US Cooperative Program)
-
-### Abstract
-
-The rapid growth of the second-hand smartphone market has created an
-urgent need for objective and efficient quality assessment. Traditional
-manual inspection is subjective, inconsistent, and difficult to scale.
-This thesis presents an end-to-end deep-learning system that automatically
-detects appearance defects on second-hand smartphones and assigns an
-intelligent quality grade with an estimated resale price.
-
-The system is built on an improved YOLOv11n object detection model,
-fine-tuned on a custom dataset of 1,901 annotated images spanning four
-defect categories: scratch, bump, paint loss, and crack. A systematic
-10-group ablation study was conducted to evaluate the effectiveness of
-data augmentation strategies, Inner-IoU loss, and CBAM attention modules.
-The best configuration — combining optimized mosaic augmentation
-(mosaic=0.4), vertical flip (flipud=0.5), and tuned loss weights
-(box=12.0, cls=3.0) — achieves **mAP@0.5 = 0.965**, representing a
-**5.8 percentage point improvement** over the baseline model, with
-recall increasing from 0.848 to 0.922.
-
-The system architecture comprises three components: (1) a WeChat Mini
-Program frontend for multi-view photo capture and result visualization;
-(2) a FastAPI backend serving an ONNX-exported model for CPU/GPU
-inference; and (3) a transparent, rule-based grading algorithm that
-aggregates defects across phone views with position-aware weights and
-severity penalties, mapping the resulting score to a grade (S/A/B/C/D)
-and an estimated resale price.
-
-Experimental results demonstrate that the system provides consistent,
-interpretable, and efficient quality grading, offering a practical
-solution for second-hand phone recycling platforms and inspection
-workflows.
-
-**Keywords**: YOLOv11; defect detection; data augmentation; ablation
-study; intelligent grading; second-hand phone; ONNX deployment; FastAPI
+The full thesis (Chinese, after-defense final version): [`thesis_final_zh.pdf`](./thesis_final_zh.pdf)
+Reference list: [`references.md`](./references.md)
 
 ---
 
 ## 中文摘要
 
-**题目**: 基于改进 YOLOv11 的二手手机外观瑕疵检测与智能定级系统设计
+随着二手智能手机交易量不断增加，传统的人工目测的方式进行外观成色判断存在主观性强、工作效率低、缺少统一评判标准等问题，严重影响二手手机市场的发展。为解决这些问题，在此基础上，基于YOLOv11目标检测算法提出一种面向中小商户的二手手机外观缺陷自动识别及等级划分的方法。
 
-**作者**: 侯天博
-**指导教师**: 熊才权 教授
-**学院**: 底特律绿色工业学院 软件工程（中美合作办学）
+本文的主要研究工作与成果如下：
 
-### 摘要
+第一，在特定多材质混合场景下的工业数据集不足的情况下，本文自制一个包含 **2707** 张高质量实拍图像的手机表面缺陷专用数据集。利用严格的标注标准及轻度物理增强方法避免了之前基于AI辅助标注造成的大量虚假正例带来的影响，使得对于小目标检测有了较好的数据支持。
 
-随着二手智能手机市场的快速增长，客观、高效的质量评估需求日益迫切。
-传统的人工检测方式存在主观性强、标准不一、难以规模化等问题。本文
-设计并实现了一套端到端的深度学习系统，能够自动检测二手手机外观
-瑕疵，并进行智能定级与估价。
+第二，进行10组消融实验进一步研究特定算法模块对于手机强反光、目标极端长宽比等情况下的表现。结果表明，在对比盲目使用CBAM注意力模块以及Inner-IoU损失所造成的负面影响后，根据实际情况而设定的空间翻转（flipud=0.5）及动态背景均衡（mosaic=0.4）的数据增强方法更具有实用性。这种方法无需增加额外参数量的情况下，使基础模型的 mAP@0.5 达到 **96.5%**，同时提高召回率至 **92.16%**。
 
-系统以改进的 YOLOv11n 目标检测模型为核心，在包含 1,901 张标注图像
-的自定义数据集上进行微调，覆盖划痕（scratch）、磕碰（bump）、掉漆
-（paint）和裂纹（crack）四类瑕疵。通过系统的 10 组消融实验，评估了
-数据增强策略、Inner-IoU 损失函数和 CBAM 注意力模块的有效性。最佳配置
-——结合优化的马赛克增强（mosaic=0.4）、垂直翻转（flipud=0.5）和调整
-的损失权重（box=12.0, cls=3.0）——达到 **mAP@0.5 = 0.965**，较基线模型
-提升 **5.8 个百分点**，召回率从 0.848 提升至 0.922。
+最后，实现从视觉检测直至商业评价的整体流程。提出一种"对角两拍法"的多角度拍摄方式以及利用对数平滑的一种非线性加权扣分的数学模型，将视觉缺陷转化为商业成色等级（S/A/B/C/D）。在工程技术上使用 ONNX 推理框架、FastAPI 异步后端和微信小程序前端进行开发，在保证单次推理耗时小于 **150 毫秒** 的同时做到全流程耗时不超过 **1.5 秒**。
 
-系统架构包含三个组件：（1）微信小程序前端，用于多视角拍照和结果
-可视化；（2）FastAPI 后端，部署 ONNX 格式模型支持 CPU/GPU 推理；
-（3）透明的规则制定级算法，结合视角权重和瑕疵严重度惩罚，对多视角
-检测结果进行聚合，将最终得分映射为等级（S/A/B/C/D）和预估转售价格。
-
-实验结果表明，该系统能够提供一致、可解释且高效的质量定级，为二手
-手机回收平台和检测流程提供了切实可行的解决方案。
-
-**关键词**: YOLOv11；瑕疵检测；数据增强；消融实验；智能定级；二手手机；
-ONNX 部署；FastAPI
+**关键词**：YOLOv11；缺陷检测；消融实验；智能定级；数据增强
 
 ---
 
-## Thesis Documents
+## English Abstract
 
-The full thesis (Chinese, .docx format) and supporting documents
-(开题报告, 任务书, 答辩材料, etc.) are available upon request.
-This repository contains the code, experiment data, and a condensed
-summary suitable for technical review.
+Since the second-hand mobile phone market is still growing, the conventional manual visual assessment to determine the condition is revealing some critical pain points, including high level of subjectivity, inefficiency, and absence of uniform quantitative criteria that strongly hinder the standardization of the industry. To solve these problems, the current study offers to design and implement an intelligent appearance defect detection and quantification system of a second-hand mobile phone based on the YOLOv11 algorithm of object detection, but with a smaller scope of use (small and mid-size retailers).
 
-### Reference Highlights
+The main contributions and results of this study are as follows:
 
-Key papers that informed this work:
+First, to address the absence of industrial data on particular multi-material mix conditions, a special smartphone surface defect dataset consisting of **2,707** high-purity real-shot images was built anew. With stringent manual annotation guidelines and gentle physical augmentation methods, the initial AI-assisted annotation noise of high-noise false-positive interference was efficiently tackled and a solid data basis of small object perception was established.
 
-- *Ultralytics YOLO11* — base object detection architecture
-- *CBAM: Convolutional Block Attention Module* — attention mechanism explored
-- *Inner-IoU* — improved bounding box regression loss
-- *MobileNetV3* — lightweight model design principles
-- *Surface defect detection surveys* — industrial inspection methodology
+Secondly, the mechanisms of failures of particular algorithm elements in conditions with high reflections and extreme aspect ratios were also thoroughly explored using 10 sets of systematic ablation experiments. Experiments proved that in comparison with the negative impacts of introducing the CBAM attention mechanism or the Inner-IoU loss function randomly, a physics-prior-based data augmentation strategy (flipud=0.5 and dynamic mosaic=0.4) has higher engineering value. This strategy did not increase any network parameters but increased the baseline model mAP@0.5 to **96.5%** and its recall rate to **92.16%**.
+
+Lastly, a comprehensive closed loop system of visual identification to commercial assessment was developed and deployed. The concept of a diagonal dual-shot multiple-view acquisition plan and the formulation of a non-linear weighted deduction model in conjunction with a logarithmic smoothing device were suggested in order to objectively convert visual defect characteristics into commercial condition ratings (S/A/B/C/D). In terms of engineering, the system uses the ONNX inference engine, FastAPI asynchronous backend and WeChat Mini Program frontend, which leads to a lightweight full-stack deployment of the system, a single inference latency of less than **150 ms** as well as a full-process response of less than **1.5 seconds**.
+
+**Keywords**: YOLOv11; Defect detection; Ablation study; Intelligent grading; Data augmentation
+
+---
+
+## Key Results Summary (from thesis Tables 4-2 / 4-3)
+
+| Item | Value |
+|------|-------|
+| Base model | YOLOv11s (~9.4M params, ~21.7 GFLOPs @ 640) |
+| Dataset | 2,707 self-built real-shot images, 4 defect classes |
+| Best config (Exp 6) | box=12.0, cls=3.0, imgsz=640, mosaic=0.4, flipud=0.5 (no Inner-IoU, no CBAM) |
+| Baseline (Exp 1) | mAP@0.5 = 0.907, Precision = 94.36%, Recall = 84.78% |
+| **Best (Exp 6)** | **mAP@0.5 = 0.965 (+5.8pp), Precision = 94.80%, Recall = 92.16% (+7.38pp)** |
+| Per-class AP@0.5 (best) | scratch 97.2% / crack 97.8% / bump 97.1% / paint 93.9% |
+| Grading model | Multi-view weighted deduction with log smoothing → S/A/B/C/D + discount rate |
+| Engineering metrics | Single inference < 150 ms; full pipeline < 1.5 s |

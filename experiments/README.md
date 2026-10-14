@@ -2,7 +2,8 @@
 
 This directory contains the results of a **10-group ablation study**
 conducted to identify the most effective improvements to the baseline
-YOLOv11n model for phone defect detection.
+YOLOv11s model for phone defect detection. Raw per-epoch training curves
+for every run are archived in [`raw_results/`](raw_results/).
 
 ## Quick Summary
 
@@ -11,8 +12,10 @@ YOLOv11n model for phone defect detection.
 | mAP@0.5 | 0.907 | **0.965** | **+5.8%** |
 | Recall | 0.848 | **0.922** | **+7.4%** |
 
-**Best configuration**: Optimized data augmentation (mosaic=0.4,
-flipud=0.5) + hyperparameter tuning (box=12.0, cls=3.0).
+**Base configuration (fixed across all runs)**: box=12.0, cls=3.0,
+imgsz=640, 100 epochs, lr0=0.0005.
+**Best configuration (Exp 6)** = base config + physics-prior augmentation
+(mosaic=0.4, flipud=0.5), no Inner-IoU, no CBAM.
 
 ## Charts
 
